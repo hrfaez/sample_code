@@ -1,0 +1,244 @@
+https://chat.openai.com/share/7138bb70-925c-4521-ba40-f6b69179ac9f
+
+
+# Import necessary libraries
+import nltk  # Natural Language Toolkit
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import string
+
+# Ensure you have the necessary NLTK data
+nltk.download('punkt')
+nltk.download('stopwords')
+
+# 1. User Input
+def get_book_details():
+    title = input("Enter the book title: ")
+    author = input("Enter the author's name: ")
+    return title, author
+
+# 2. Read Book
+def read_book(filename):
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            return file.read()
+    except FileNotFoundError:
+        print("The file was not found.")
+        return None
+
+# 3. Text Cleanup
+def text_cleanup(text):
+    # Tokenization and lowercasing
+    tokens = word_tokenize(text.lower())
+    
+    # Remove punctuation and stopwords
+    cleaned_tokens = [word for word in tokens if word not in string.punctuation and word not in stopwords.words('english')]
+    return ' '.join(cleaned_tokens)
+
+# 4. Summarize Story
+def summarize_story(text):
+    # Placeholder for a real summarization algorithm
+    words = text.split()
+    summary = ' '.join(words[:100])  # naive summarization
+    return summary
+
+# 5. Character Analysis (Placeholder for demonstration)
+def character_analysis(text):
+    # A real implementation would use Named Entity Recognition to find characters
+    return "Character analysis not implemented yet."
+
+# 6. Main function to run the project
+def main():
+    title, author = get_book_details()
+    print(f"Analyzing {title} by {author}...")
+    
+    # Read and process the book
+    text = read_book('path/to/book.txt')
+    if text:
+        cleaned_text = text_cleanup(text)
+        summary = summarize_story(cleaned_text)
+        
+        print("\n--- Book Summary ---")
+        print(summary)
+        
+        # Further analysis
+        print("\n--- Character Analysis ---")
+        print(character_analysis(cleaned_text))
+    else:
+        print("Failed to read the book.")
+
+# Run the main function
+if __name__ == "__main__":
+    main()
+
+
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+import string
+
+# Ensure you have the necessary NLTK data
+nltk.download('punkt')
+nltk.download('stopwords')
+
+class Book:
+    def __init__(self, title, author, filepath):
+        self.title = title
+        self.author = author
+        self.filepath = filepath
+        self.content = self.read_book()
+
+    def read_book(self):
+        try:
+            with open(self.filepath, 'r', encoding='utf-8') as file:
+                return file.read()
+        except FileNotFoundError:
+            print("The file was not found.")
+            return None
+
+    def text_cleanup(self):
+        tokens = word_tokenize(self.content.lower())
+        cleaned_tokens = [word for word in tokens if word not in string.punctuation and word not in stopwords.words('english')]
+        return ' '.join(cleaned_tokens)
+
+    def summarize_story(self):
+        words = self.content.split()
+        return ' '.join(words[:100])  # naive summarization
+
+class Customer:
+    def __init__(self, name):
+        self.name = name
+        self.borrowed_books = []
+
+    def borrow_book(self, book, bookstore):
+        if bookstore.lend_book(book, self):
+            self.borrowed_books.append(book)
+
+    def return_book(self, book, bookstore):
+        if book in self.borrowed_books:
+            self.borrowed_books.remove(book)
+            bookstore.receive_book(book)
+
+class BookStore:
+    def __init__(self, name):
+        self.name = name
+        self.inventory = []
+
+    def add_book(self, book):
+        self.inventory.append(book)
+
+    def lend_book(self, book, customer):
+        if book in self.inventory:
+            print(f"Lending {book.title} to {customer.name}")
+            self.inventory.remove(book)
+            return True
+        else:
+            print(f"{book.title} is not available.")
+            return False
+
+    def receive_book(self, book):
+        print(f"Receiving {book.title} back into inventory")
+        self.inventory.append(book)
+
+def main():
+    # Create a bookstore
+    mystore = BookStore("My Book Store")
+
+    # Add books to the bookstore
+    book1 = Book("Book1", "Author1", "path/to/book1.txt")
+    mystore.add_book(book1)
+
+    # Create a customer
+    customer1 = Customer("John Doe")
+
+    # Customer borrows a book
+    customer1.borrow_book(book1, mystore)
+
+    # Customer returns the book
+    customer1.return_book(book1, mystore)
+
+if __name__ == "__main__":
+    main()
+
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+#------------------------------------------------------------------------------
+
+class Book:
+    # ... [rest of the Book class]
+
+class Customer:
+    # ... [rest of the Customer class]
+
+class BookStore:
+    # ... [rest of the BookStore class]
+
+def display_menu():
+    print("\nWelcome to the Book Store!")
+    print("1. Add a Book to the Store")
+    print("2. Remove a Book from the Store")
+    print("3. Borrow a Book")
+    print("4. Return a Book")
+    print("5. Exit")
+    choice = input("Enter your choice (1-5): ")
+    return choice
+
+def add_book_to_store(store):
+    title = input("Enter the book title: ")
+    author = input("Enter the author's name: ")
+    filepath = input("Enter the path to the book file: ")
+    new_book = Book(title, author, filepath)
+    store.add_book(new_book)
+    print(f"{title} by {author} has been added to the store.")
+
+def remove_book_from_store(store):
+    title = input("Enter the title of the book to remove: ")
+    for book in store.inventory:
+        if book.title == title:
+            store.inventory.remove(book)
+            print(f"{title} has been removed from the store.")
+            return
+    print("Book not found in the inventory.")
+
+def borrow_book_from_store(store, customer):
+    title = input("Enter the title of the book to borrow: ")
+    for book in store.inventory:
+        if book.title == title:
+            customer.borrow_book(book, store)
+            return
+    print("Book not found or not available.")
+
+def return_book_to_store(store, customer):
+    title = input("Enter the title of the book to return: ")
+    for book in customer.borrowed_books:
+        if book.title == title:
+            customer.return_book(book, store)
+            return
+    print("You do not have this book.")
+
+def main():
+    mystore = BookStore("My Book Store")
+    customer1 = Customer("John Doe")
+
+    while True:
+        choice = display_menu()
+        if choice == '1':
+            add_book_to_store(mystore)
+        elif choice == '2':
+            remove_book_from_store(mystore)
+        elif choice == '3':
+            borrow_book_from_store(mystore, customer1)
+        elif choice == '4':
+            return_book_to_store(mystore, customer1)
+        elif choice == '5':
+            print("Thank you for visiting the Book Store!")
+            break
+        else:
+            print("Invalid choice, please try again.")
+
+if __name__ == "__main__":
+    main()
